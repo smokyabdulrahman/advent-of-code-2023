@@ -26,12 +26,9 @@ function extractNumberFromLine(line) {
 	let firstNumber;
 	let lastNumber;
 
-	console.log("line: ", line);
 	while (i <= j && ( !firstNumber || !lastNumber )) {
 		firstNumber = getNumberIfAny(line, i);
 		lastNumber = getNumberIfAny(line, j);
-		console.log("f: ", firstNumber);
-		console.log("l: ", lastNumber);
 		if (!firstNumber) i++;
 		if (!lastNumber) j--;
 	}
@@ -50,7 +47,6 @@ function isNumber(c) {
 }
 
 function getNumberFromLetteralIfAny(line, startIndex) {
-	"".substring
 	return Object.keys(numbers)
 	.filter(key => key.length + startIndex <= line.length)
 	.map(key => numbers[line.substring(startIndex, key.length + startIndex)])
