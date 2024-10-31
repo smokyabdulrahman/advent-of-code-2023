@@ -1,11 +1,11 @@
-package main
+package part_one
 
 import (
+	"advent-of-code-2023/day2/parser"
 	"bufio"
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -15,20 +15,10 @@ var maxCubes = map[string]int{
 	"blue":  14,
 }
 
-func parseGame(line string) (gameId int, gameRuns string) {
-	game := strings.Split(line, ":")
-	gameIdPart := strings.Split(game[0], " ")
-
-	gameId, _ = strconv.Atoi(gameIdPart[1])
-	gameRuns = strings.TrimSpace(game[1])
-	return
-}
-
 func isAPossibleGame(gameRuns string) bool {
-	// 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-	runs := strings.Split(gameRuns, ";")
-	for _, run := range runs {
-		if !isAPossibleRun(strings.TrimSpace(run)) {
+	cubeGroups := parser.ParseRuns(gameRuns)
+	for _, cubeGroup := range cubeGroups {
+		if !isAPossibleRun(strings.TrimSpace(cubeGroup)) {
 			return false
 		}
 	}
@@ -36,14 +26,11 @@ func isAPossibleGame(gameRuns string) bool {
 	return true
 }
 
-func isAPossibleRun(run string) bool {
-	// 1 red, 2 green, 6 blue
-	cubes := strings.Split(run, ", ")
+func isAPossibleRun(cubeGroup string) bool {
+	cubes := parser.ParseCubeGroup(cubeGroup)
 
 	for _, cube := range cubes {
-		cubeInfo := strings.Split(cube, " ")
-		number, _ := strconv.Atoi(cubeInfo[0])
-		color := cubeInfo[1]
+		number, color := parser.ParseCube(cube)
 		if number > maxCubes[color] {
 			return false
 		}
@@ -63,7 +50,7 @@ func main() {
 	var answer = 0
 	for scanner.Scan() {
 		line := scanner.Text()
-		gameId, gameRuns := parseGame(line)
+		gameId, gameRuns := parser.ParseGame(line)
 
 		if isAPossibleGame(gameRuns) {
 			answer += gameId
